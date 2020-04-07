@@ -3,6 +3,48 @@ SET SERVEROUTPUT ON;
 SELECT * FROM EMPLEADOS;
 
 DECLARE
+    RAN NUMBER := ROUND(DBMS_RANDOM.VALUE(1, 3));
+    ERROR_1 EXCEPTION;
+    ERROR_2 EXCEPTION;
+    ERROR_3 EXCEPTION;
+BEGIN
+    CASE
+        WHEN RAN = 1 THEN
+            RAISE ERROR_1;
+        WHEN RAN = 2 THEN
+            RAISE ERROR_2;
+        WHEN RAN = 3 THEN
+            RAISE ERROR_3;
+    END CASE;
+    dbms_output.put_line('No se ejecuta en ningun momento.');
+    
+    EXCEPTION
+        WHEN ERROR_1 THEN
+            dbms_output.put_line('Ocurrio un error de tipo 1.');
+        WHEN ERROR_2 THEN
+            dbms_output.put_line('Ocurrio un error de tipo 2.');
+        WHEN ERROR_3 THEN
+            dbms_output.put_line('Ocurrio un error de tipo 3.');
+        WHEN OTHERS THEN
+            dbms_output.put_line('Error desconocido.');
+END;
+
+
+
+DECLARE
+    NOMBRE NVARCHAR2(10);
+BEGIN
+    SELECT NOMBRE INTO NOMBRE FROM EMPLEADOS WHERE ID = 5;
+    dbms_output.put_line('Empleado: '||NOMBRE);
+    
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN -- No encuentra dato
+        dbms_output.put_line('No encontro data con ese código.');    
+        WHEN OTHERS THEN -- Ocurrio una excepcion desconocida
+        dbms_output.put_line('Al raro ha pasado.');    
+END;
+
+DECLARE
     CURSOR C_EMPLEADO IS SELECT * FROM EMPLEADOS;
     ROW_EMPLEADO EMPLEADOS%ROWTYPE;
     
